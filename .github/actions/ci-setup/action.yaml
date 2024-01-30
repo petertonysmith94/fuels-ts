@@ -6,6 +6,12 @@ inputs:
   pnpm-version:
     description: "PNPM version"
     default: 8.9.0
+  generated-file-paths:
+    description: "The paths that will be cached"
+    default: |
+      apps/docs/.typedoc
+      apps/docs/src/api
+      packages/providers/src/__generated__
 runs:
   using: "composite"
   steps:
@@ -18,10 +24,7 @@ runs:
     - name: Restore Generated Files
       uses: actions/cache/save@v3
       with:
-        path: |
-          apps/docs/.typedoc
-          apps/docs/src/api
-          packages/providers/src/__generated__
+        path: ${{ inputs.generated-file-paths }}
         key: ${{ runner.os }}-generated-${{ github.sha }}
 
     - name: Cache Build
@@ -33,10 +36,7 @@ runs:
     - name: Save Generated Files
       uses: actions/cache/restore@v3
       with:
-        path: |
-          apps/docs/.typedoc
-          apps/docs/src/api
-          packages/providers/src/__generated__
+        path: ${{ inputs.generated-file-paths }}
         key: ${{ runner.os }}-generated-${{ github.sha }}
 
     - name: Setup Node.js
